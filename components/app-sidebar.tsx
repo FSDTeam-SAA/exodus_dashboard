@@ -20,23 +20,23 @@ const menuItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboard,
-    url: "#",
+    url: "/",
     isActive: true,
   },
   {
     title: "Passenger Booking",
     icon: Users,
-    url: "#",
+    url: "/passenger-booking",
   },
   {
     title: "Bus Lists",
     icon: Bus,
-    url: "#",
+    url: "/bus-list",
   },
   {
     title: "Driver List",
     icon: UserCheck,
-    url: "#",
+    url: "/dirver-list",
   },
   {
     title: "Scheduled Ride",
@@ -57,7 +57,7 @@ const menuItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar className="border-r-0 bg-[#1F2022] w-[300px] " {...props}>
+    <Sidebar className="border-r-0 bg-[#1F2022] " {...props}>
       <SidebarHeader className=" ">
         <div className="flex justify-center">
           <Image src="/assets/logo.png" alt="logo" width={100} height={100} className="w-[124px] h-[90px]" />

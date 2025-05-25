@@ -16,7 +16,7 @@ import { Bell, ChevronDown } from "lucide-react"
 export function DashboardNavbar() {
   return (
     <header className="flex h-[80px] items-center justify-between border-b bg-[#1F2022] px-6">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 ">
         <SidebarTrigger className="-ml-2" />
       </div>
 
