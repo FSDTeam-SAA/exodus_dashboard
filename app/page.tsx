@@ -9,8 +9,8 @@ export default function DashboardPage() {
       <DashboardNavbar />
       <main className="flex-1 space-y-6 p-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back to your admin panel</p>
+          <h1 className="text-[40px] font-bold text-[#1F2022] ">Dashboard</h1>
+          <p className="text-xl text-[#1F2022] font-medium">Welcome back to your admin panel</p>
         </div>
 
         <DashboardStats />

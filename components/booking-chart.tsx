@@ -3,64 +3,152 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 
-const data = [
-  { month: "Jan", bookings: 100 },
-  { month: "Feb", bookings: 150 },
-  { month: "Mar", bookings: 200 },
-  { month: "Apr", bookings: 180 },
-  { month: "May", bookings: 220 },
-  { month: "Jun", bookings: 250 },
-  { month: "Jul", bookings: 280 },
-  { month: "Aug", bookings: 300 },
-  { month: "Sep", bookings: 350 },
-  { month: "Oct", bookings: 400 },
-  { month: "Nov", bookings: 450 },
-  { month: "Dec", bookings: 500 },
-]
+interface BookingData {
+  year: number
+  month: number
+  total: number
+}
+
+interface ApiResponse {
+  success: boolean
+  data: BookingData[]
+}
+
+interface ChartData {
+  month: string
+  bookings: number
+}
+
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+// Your JWT token
+const AUTH_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgwODY5NjksImV4cCI6MTc0ODE3MzM2OX0.sJAWhtM502elxzi6aRUbReZXHdLbIs1HqknZNsQ1mN4"
+
+// Generate dynamic year options
+function generateYearOptions(): number[] {
+  const currentYear = new Date().getFullYear()
+  const startYear = 2020 // You can adjust this start year as needed
+  const endYear = currentYear + 2 // Include next 2 years for future planning
+
+  const years: number[] = []
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(year)
+  }
+  return years.reverse() // Show newest years first
+}
+
+async function fetchBookingStats(year: string): Promise<ApiResponse> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking-stats?year=${year}`, {
+    headers: {
+      Authorization: `Bearer ${AUTH_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch booking stats")
+  }
+  return response.json()
+}
+
+function transformData(apiData: BookingData[]): ChartData[] {
+  // Create array for all 12 months with 0 bookings as default
+  const chartData: ChartData[] = monthNames.map((monthName) => ({
+    month: monthName,
+    bookings: 0,
+  }))
+
+  // Fill in actual data from API
+  apiData.forEach((item) => {
+    if (item.month >= 1 && item.month <= 12) {
+      chartData[item.month - 1].bookings = item.total
+    }
+  })
+
+  return chartData
+}
 
 export function BookingChart() {
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString())
+
+  const {
+    data: apiResponse,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["booking-stats", selectedYear],
+    queryFn: () => fetchBookingStats(selectedYear),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+
+  const chartData = apiResponse?.data ? transformData(apiResponse.data) : []
+
+  // Debug: Log the API response
+  console.log("API Response:", apiResponse)
+
+  if (error) {
+    return (
+      <Card className="bg-gray-800 border-gray-700">
+        <CardContent className="flex items-center justify-center h-[400px]">
+          <p className="text-red-400">Error loading booking statistics: {error.message}</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
-    <Card className="bg-gray-800 border-gray-700">
+    <Card className="bg-[#1F2022] border-[#374151]">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-yellow-500">Booking Statistics</CardTitle>
-        <Select defaultValue="2025">
-          <SelectTrigger className="w-20 bg-yellow-500 text-black border-0">
+        <CardTitle className="text-[#C0A05C] text-[32px] font-semibold">Booking Statistics</CardTitle>
+        <Select value={selectedYear} onValueChange={setSelectedYear}>
+          <SelectTrigger className="w-20 bg-[#C0A05C] text-black border-0">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="2023">2023</SelectItem>
-            <SelectItem value="2024">2024</SelectItem>
-            <SelectItem value="2025">2025</SelectItem>
+          <SelectContent className="bg-[#1F2022] border-transparent text-[#C0A05C]">
+            {generateYearOptions().map((year) => (
+              <SelectItem key={year} value={year.toString()}>
+                {year}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </CardHeader>
       <CardContent>
         <div className="h-[400px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
-              <YAxis stroke="#9CA3AF" fontSize={12} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1F2937",
-                  border: "1px solid #374151",
-                  borderRadius: "8px",
-                  color: "#F59E0B",
-                }}
-                labelStyle={{ color: "#F59E0B" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="bookings"
-                stroke="#F59E0B"
-                strokeWidth={3}
-                dot={{ fill: "#F59E0B", strokeWidth: 2, r: 4 }}
-                activeDot={{ r: 6, fill: "#F59E0B" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
+                <YAxis stroke="#9CA3AF" fontSize={12} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #D5D5D5",
+                    borderRadius: "8px",
+                    color: "#C0A05C",
+                  }}
+                  labelStyle={{ color: "#C0A05C" }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="bookings"
+                  stroke="#C0A05C"
+                  strokeWidth={3}
+                  dot={{ fill: "#C0A05C", strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, fill: "#F59E0B" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </CardContent>
     </Card>

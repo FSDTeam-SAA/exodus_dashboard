@@ -1,13 +1,17 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Poppins } from "next/font/google"
 import "./globals.css"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import AppProvider from "@/provider/AppProvider"
+import { Toaster } from "sonner"
 
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+})
 
 export const metadata: Metadata = {
   title: "Exodus  Dashboard",
@@ -24,10 +28,11 @@ export default function RootLayout({
       <body className={inter.className}>
 
         <SidebarProvider>
-          <div className="flex gap-10 min-h-screen w-full">
+          <div className="flex  min-h-screen w-full">
             <AppSidebar />
             <AppProvider>
               <div className="flex-1">{children}</div>
+              <Toaster />
             </AppProvider>
           </div>
         </SidebarProvider>
