@@ -6,7 +6,8 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import AppProvider from "@/provider/AppProvider"
 import { Toaster } from "sonner"
-
+import { AuthProvider } from "@/components/sheyerd/AuthProvider"
+import TokenProvider from "@/components/sheyerd/TokenProvider"
 
 const inter = Poppins({
   subsets: ["latin"],
@@ -31,7 +32,14 @@ export default function RootLayout({
           <div className="flex  min-h-screen w-full">
             <AppSidebar />
             <AppProvider>
-              <div className="flex-1">{children}</div>
+              <AuthProvider>
+
+                <TokenProvider>
+
+                  <div className="flex-1">{children}</div>
+                </TokenProvider>
+
+              </AuthProvider>
               <Toaster />
             </AppProvider>
           </div>

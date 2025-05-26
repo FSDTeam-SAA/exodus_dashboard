@@ -43,7 +43,7 @@ export function ReusablePagination({
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="h-8 w-8 p-0 border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+        className="h-8 w-8 p-0 border-[#C0A05C] dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
       >
         <ChevronLeft className="h-4 w-4 text-white" />
       </Button>
@@ -55,15 +55,15 @@ export function ReusablePagination({
             size="sm"
             onClick={() => onPageChange(1)}
             className={`h-8 w-8 p-0 ${currentPage === 1
-              ? "bg-amber-600 hover:bg-amber-700 text-white"
-              : "border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+              ? "bg-[#C0A05C] hover:bg-[#C0A05C]/80 text-white"
+              : "border-[#C0A05C] dark:border-[#C0A05C]/80 hover:bg-amber-100 dark:hover:bg-amber-800"
               }`}
           >
             1
           </Button>
           {showStartEllipsis && (
             <div className="flex items-center justify-center h-8 w-8">
-              <MoreHorizontal className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <MoreHorizontal className="h-4 w-4 text-[#C0A05C] dark:text-amber-400" />
             </div>
           )}
         </>
@@ -76,8 +76,8 @@ export function ReusablePagination({
           size="sm"
           onClick={() => onPageChange(page)}
           className={`h-8 w-8 p-0 ${currentPage === page
-            ? "bg-amber-600 hover:bg-amber-700 text-white"
-            : "border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+            ? "bg-[#C0A05C] hover:bg-[#C0A05C]/80 text-white"
+            : "border-[#C0A05C] dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
             }`}
         >
           {page}
