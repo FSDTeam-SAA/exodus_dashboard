@@ -71,7 +71,7 @@ interface EditFormData {
 
 export default function BusList() {
     const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgwODY5NjksImV4cCI6MTc0ODE3MzM2OX0.sJAWhtM502elxzi6aRUbReZXHdLbIs1HqknZNsQ1mN4"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
 
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState<boolean>(false)
@@ -368,7 +368,7 @@ export default function BusList() {
                             <div className="text-center py-8 text-gray-400">No buses found. Add your first bus!</div>
                         )}
                         <div className="flex items-center justify-between bg-[#1F2022] px-4 py-4 ">
-                            <div className="bg-[#1F2022] px-4 py-7 text-white text-sm  border-gray-700">
+                            <div className="bg-[#1F2022] px-4 py-7 text-[#C0A05C] text-sm  border-gray-700">
                                 Showing {buses.length} of {data?.data?.pagination?.total || 0} entries
                             </div>
                             <div>

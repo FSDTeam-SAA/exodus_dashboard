@@ -41,17 +41,17 @@ const menuItems = [
   {
     title: "Scheduled Ride",
     icon: Calendar,
-    url: "#",
+    url: "/scheduled-ride",
   },
   {
     title: "Reserve Bus",
     icon: BookOpen,
-    url: "#",
+    url: "/reserve-bus",
   },
   {
     title: "Subscription",
     icon: CreditCard,
-    url: "#",
+    url: "/subscription",
   },
 ]
 

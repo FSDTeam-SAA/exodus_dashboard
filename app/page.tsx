@@ -3,7 +3,11 @@ import { DashboardStats } from "@/components/dashboard-stats"
 import { BookingChart } from "@/components/booking-chart"
 import { SidebarInset } from "@/components/ui/sidebar"
 
+
+
 export default function DashboardPage() {
+ 
+  
   return (
     <SidebarInset>
       <DashboardNavbar />

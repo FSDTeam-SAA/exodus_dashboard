@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import {  Trash2, Upload, Users, Plus } from "lucide-react"
+import { Trash2, Upload, Users, Plus } from "lucide-react"
 import { toast } from "sonner"
 
 interface Driver {
@@ -27,7 +27,7 @@ interface Driver {
   name: string
   email: string
   username: string
-  credit: number
+  credit: number | null
   role: string
   createdAt: string
   updatedAt: string
@@ -37,12 +37,23 @@ interface Driver {
     url: string
   }
   phone?: string
+  __v: number
+}
+
+interface Pagination {
+  total: number
+  page: number
+  limit: number
+  totalPages: number
 }
 
 interface ApiResponse {
   success: boolean
   message: string
-  data: Driver[]
+  data: {
+    drivers: Driver[]
+    pagination: Pagination
+  }
 }
 
 type DriverFormData = {
@@ -64,18 +75,18 @@ export default function DriverManagement() {
   const [showAddForm, setShowAddForm] = useState(false)
   const [deleteDriverId, setDeleteDriverId] = useState<string | null>(null)
   const [formData, setFormData] = useState<DriverFormData>({
-  name: "",
-  email: "",
-  phone: "",
-  password: "",
-  idNo: "",
-  username: "",
-  avatar: null,
-})
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    idNo: "",
+    username: "",
+    avatar: null,
+  })
   const [dragActive, setDragActive] = useState(false)
 
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgwODY5NjksImV4cCI6MTc0ODE3MzM2OX0.sJAWhtM502elxzi6aRUbReZXHdLbIs1HqknZNsQ1mN4"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
 
   const api = {
     getAllDrivers: async (): Promise<ApiResponse> => {
@@ -237,7 +248,9 @@ export default function DriverManagement() {
     )
   }
 
-  const drivers = driversResponse?.data || []
+  // Fixed: Access drivers from the correct nested path
+  const drivers = driversResponse?.data.drivers || []
+  const pagination = driversResponse?.data.pagination
 
   return (
     <div className="px-6">
@@ -295,7 +308,7 @@ export default function DriverManagement() {
                           <td className="p-4 text-base text-[#C0A05C] font-medium">{driver.phone || "N/A"}</td>
                           <td className="p-4">
                             <Badge variant="secondary" className="bg-green-600 text-white">
-                              ${driver.credit}
+                              ${driver.credit ?? 0}
                             </Badge>
                           </td>
                           <td className="p-4 text-base text-[#C0A05C] font-medium">
@@ -303,9 +316,6 @@ export default function DriverManagement() {
                           </td>
                           <td className="p-4 text-base text-[#C0A05C] font-medium">
                             <div className="flex items-center gap-2">
-                              {/* <Button variant="ghost" size="icon" className="w-8 h-8 text-blue-400 hover:text-blue-300">
-                                <Edit className="w-4 h-4" />
-                              </Button> */}
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -324,7 +334,14 @@ export default function DriverManagement() {
               </CardContent>
             </Card>
 
-            <div className="mt-4 text-sm text-gray-400">Showing {drivers.length} drivers</div>
+            <div className="mt-4 text-sm text-gray-400">
+              Showing {drivers.length} of {pagination?.total || 0} drivers
+              {pagination && (
+                <span className="ml-2">
+                  (Page {pagination.page} of {pagination.totalPages})
+                </span>
+              )}
+            </div>
           </div>
         ) : (
           // Add Driver Form View
