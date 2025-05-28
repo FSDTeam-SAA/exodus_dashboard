@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Trash2, Upload, Users, Plus } from "lucide-react"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
+import { ReusablePagination } from "@/components/shared/Pagination"
+
 
 interface Driver {
   _id: string
@@ -84,13 +87,14 @@ export default function DriverManagement() {
     avatar: null,
   })
   const [dragActive, setDragActive] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+  const session = useSession()
+  const token = session?.data?.accessToken
 
   const api = {
     getAllDrivers: async (): Promise<ApiResponse> => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/all/drivers`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/all/drivers?page=${currentPage}&limit=10`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -133,7 +137,7 @@ export default function DriverManagement() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["drivers"],
+    queryKey: ["drivers", currentPage],
     queryFn: api.getAllDrivers,
   })
 
@@ -230,6 +234,10 @@ export default function DriverManagement() {
     if (deleteDriverId) {
       deleteDriverMutation.mutate(deleteDriverId)
     }
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
   }
 
   if (isLoading) {
@@ -332,16 +340,19 @@ export default function DriverManagement() {
                   </table>
                 </div>
               </CardContent>
+              <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-3">
+                <div className="text-sm text-gray-400">
+                  Showing {drivers.length} of {pagination?.total || 0} drivers
+                </div>
+                <ReusablePagination
+                  currentPage={pagination?.page ?? 1}
+                  totalPages={pagination?.totalPages ?? 1}
+                  onPageChange={handlePageChange}
+                />
+
+              </div>
             </Card>
 
-            <div className="mt-4 text-sm text-gray-400">
-              Showing {drivers.length} of {pagination?.total || 0} drivers
-              {pagination && (
-                <span className="ml-2">
-                  (Page {pagination.page} of {pagination.totalPages})
-                </span>
-              )}
-            </div>
           </div>
         ) : (
           // Add Driver Form View
@@ -470,9 +481,8 @@ export default function DriverManagement() {
                     <div className="lg:col-span-1">
                       <Label className="text-[#C0A05C] text-base font-medium mb-2 block">Photo</Label>
                       <div
-                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors h-[280px] flex flex-col items-center justify-center ${
-                          dragActive ? "border-[#C0A05C] bg-[#C0A05C]/10" : "border-[#C0A05C]/50 hover:border-[#C0A05C]"
-                        }`}
+                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors h-[280px] flex flex-col items-center justify-center ${dragActive ? "border-[#C0A05C] bg-[#C0A05C]/10" : "border-[#C0A05C]/50 hover:border-[#C0A05C]"
+                          }`}
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
                         onDragOver={handleDrag}

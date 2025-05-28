@@ -24,7 +24,8 @@ import {
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ReusablePagination } from "@/components/sheyerd/Pagination"
+import { ReusablePagination } from "@/components/shared/Pagination"
+import { useSession } from "next-auth/react"
 
 interface Stop {
     _id?: string
@@ -70,8 +71,9 @@ interface EditFormData {
 }
 
 export default function BusList() {
-    const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+    const session = useSession();
+    const token = session?.data?.accessToken
+
 
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState<boolean>(false)
@@ -172,9 +174,9 @@ export default function BusList() {
             queryClient.invalidateQueries({ queryKey: ["buses"] })
             toast.success("Bus deleted successfully!")
         },
-        onError: (error: Error) => {
+        onError: () => {
             toast.error("Failed to delete bus")
-            console.error("Delete error:", error)
+            
         },
     })
 

@@ -13,6 +13,7 @@ import { Bus, X, Plus, Save } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useSession } from "next-auth/react"
 
 
 interface BusFormData {
@@ -30,7 +31,10 @@ interface BusFormData {
 
 export default function AddBus() {
     const router = useRouter()
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+    const session = useSession();
+    const token = session?.data?.accessToken
+
+
     const queryClient = useQueryClient()
 
     const createBus = async (busData: BusFormData): Promise<void> => {
@@ -69,9 +73,9 @@ export default function AddBus() {
             toast.success("Bus added successfully!")
             router.push("/bus-list")
         },
-        onError: (error) => {
+        onError: () => {
             toast.error("Failed to add bus")
-            console.error("Create error:", error)
+
         },
     })
 

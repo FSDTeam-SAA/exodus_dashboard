@@ -21,9 +21,9 @@ import {
 import { toast } from "sonner"
 import { AddRideForm } from "./AddRideForm"
 import { EditRideForm } from "./EditRideForm"
+import { useSession } from "next-auth/react"
 
-const API_TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+
 
 interface Schedule {
     _id: string
@@ -64,6 +64,8 @@ export default function ScheduledRidePage() {
     const [deleteScheduleId, setDeleteScheduleId] = useState<string | null>(null)
     const [editSchedule, setEditSchedule] = useState<Schedule | null>(null)
     const queryClient = useQueryClient()
+    const session = useSession();
+    const API_TOKEN = session?.data?.accessToken
 
     // Fetch schedules
     const {
@@ -201,35 +203,35 @@ export default function ScheduledRidePage() {
                                 </thead>
                                 <tbody>
                                     {schedules.map((schedule) => (
-                                        <tr key={schedule._id} className="bg-[#1F2022] text-white border-b border-[#C0A05C]">
-                                            <td className="font-medium text-[#C0A05C] text-base px-4 py-3">{schedule.busId.name}</td>
-                                            <td className="px-4 py-3 text-base text-[#C0A05C]">{schedule.busId.bus_number}</td>
+                                        <tr key={schedule?._id} className="bg-[#1F2022] text-white border-b border-[#C0A05C]">
+                                            <td className="font-medium text-[#C0A05C] text-base px-4 py-3">{schedule?.busId?.name}</td>
+                                            <td className="px-4 py-3 text-base text-[#C0A05C]">{schedule?.busId?.bus_number}</td>
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center gap-2">
                                                     <Avatar className="w-8 h-8 rounded-full bg-[#C0A05C] text-[#1F2022]">
-                                                        <AvatarImage src={schedule.driverId.avatar.url || "/placeholder.svg"} />
-                                                        <AvatarFallback>{schedule.driverId.name.charAt(0).toUpperCase()}</AvatarFallback>
+                                                        <AvatarImage src={schedule?.driverId?.avatar.url || "/placeholder.svg"} />
+                                                        <AvatarFallback>{schedule?.driverId?.name.charAt(0).toUpperCase()}</AvatarFallback>
                                                     </Avatar>
                                                     <div>
-                                                        <div className="font-medium text-base text-[#C0A05C]">{schedule.driverId.name}</div>
-                                                        <div className="text-sm text-[#C0A05C]">{schedule.driverId.email}</div>
+                                                        <div className="font-medium text-base text-[#C0A05C]">{schedule?.driverId?.name}</div>
+                                                        <div className="text-sm text-[#C0A05C]">{schedule?.driverId?.email}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div>
-                                                    <div className="font-medium text-base text-[#C0A05C]">{schedule.busId.source}</div>
+                                                    <div className="font-medium text-base text-[#C0A05C]">{schedule?.busId?.source}</div>
                                                     <div className="text-sm text-[#C0A05C]">{getFirstScheduleTime(schedule.schedules)}</div>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <div>
-                                                    <div className="font-medium text-base text-[#C0A05C]">{schedule.busId.lastStop}</div>
+                                                    <div className="font-medium text-base text-[#C0A05C]">{schedule?.busId?.lastStop}</div>
                                                     <div className="text-sm text-[#C0A05C]">{getFirstScheduleTime(schedule.schedules)}</div>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-3">
-                                                <div className="text-base text-[#C0A05C]">{formatScheduleDays(schedule.schedules)}</div>
+                                                <div className="text-base text-[#C0A05C]">{formatScheduleDays(schedule?.schedules)}</div>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <Badge
