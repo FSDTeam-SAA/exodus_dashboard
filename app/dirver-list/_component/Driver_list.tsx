@@ -23,7 +23,7 @@ import { Trash2, Upload, Users, Plus } from "lucide-react"
 import { toast } from "sonner"
 import { useSession } from "next-auth/react"
 import { ReusablePagination } from "@/components/shared/Pagination"
-
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Driver {
   _id: string
@@ -240,10 +240,156 @@ export default function DriverManagement() {
     setCurrentPage(page)
   }
 
+  const renderFormSkeleton = () => (
+    <div className="px-6">
+      <div className="flex items-center justify-between mt-10 mb-7">
+        <Skeleton className="h-10 w-48 bg-gray-700" />
+        <Skeleton className="h-[50px] w-32 bg-gray-700 rounded-[8px]" />
+      </div>
+      <Card className="bg-[#1F2022] border-[#C0A05C]">
+        <CardContent className="p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Form Fields Skeleton */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Name Field */}
+              <div>
+                <Skeleton className="h-4 w-16 bg-gray-700 mb-2" />
+                <Skeleton className="h-[50px] w-full bg-gray-700 rounded-[6px]" />
+              </div>
+
+              {/* ID No and Email Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Skeleton className="h-4 w-12 bg-gray-700 mb-2" />
+                  <Skeleton className="h-[50px] w-full bg-gray-700 rounded-[6px]" />
+                </div>
+                <div>
+                  <Skeleton className="h-4 w-12 bg-gray-700 mb-2" />
+                  <Skeleton className="h-[50px] w-full bg-gray-700 rounded-[6px]" />
+                </div>
+              </div>
+
+              {/* Phone and Password Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Skeleton className="h-4 w-12 bg-gray-700 mb-2" />
+                  <Skeleton className="h-[50px] w-full bg-gray-700 rounded-[6px]" />
+                </div>
+                <div>
+                  <Skeleton className="h-4 w-16 bg-gray-700 mb-2" />
+                  <Skeleton className="h-[50px] w-full bg-gray-700 rounded-[6px]" />
+                </div>
+              </div>
+
+              {/* Username Field */}
+              <div>
+                <Skeleton className="h-4 w-16 bg-gray-700 mb-2" />
+                <Skeleton className="h-[50px] w-full bg-gray-700 rounded-[6px]" />
+              </div>
+            </div>
+
+            {/* Right Column - Photo Upload Skeleton */}
+            <div className="lg:col-span-1">
+              <Skeleton className="h-4 w-12 bg-gray-700 mb-2" />
+              <div className="border-2 border-dashed border-[#C0A05C]/50 rounded-lg p-8 h-[280px] flex flex-col items-center justify-center">
+                <Skeleton className="w-16 h-16 rounded-full bg-gray-700 mb-4" />
+                <Skeleton className="h-4 w-48 bg-gray-700 mb-4" />
+                <Skeleton className="h-10 w-24 bg-gray-700 rounded-md" />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button Skeleton */}
+          <div className="flex justify-end mt-8">
+            <Skeleton className="h-12 w-32 bg-gray-700 rounded-md" />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-lg">Loading drivers...</div>
+      <div className="px-6">
+        <div className="flex items-center justify-between mt-10 mb-7">
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-6 h-6 bg-gray-700" />
+            <Skeleton className="h-10 w-48 bg-gray-700" />
+          </div>
+          <Skeleton className="h-[50px] w-32 bg-gray-700 rounded-[8px]" />
+        </div>
+
+        <Card className="bg-[#1F2022]">
+          <CardContent className="p-0">
+            <div className="overflow-x-auto !rounded-[12px] border-transparent">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-[#C0A05C] bg-[#C0A05C]">
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-8 bg-[#1F2022]/20" />
+                    </th>
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-16 bg-[#1F2022]/20" />
+                    </th>
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-12 bg-[#1F2022]/20" />
+                    </th>
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-14 bg-[#1F2022]/20" />
+                    </th>
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-12 bg-[#1F2022]/20" />
+                    </th>
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-16 bg-[#1F2022]/20" />
+                    </th>
+                    <th className="text-left p-4">
+                      <Skeleton className="h-4 w-14 bg-[#1F2022]/20" />
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <tr key={i} className="border-b border-[#C0A05C]">
+                      <td className="p-4">
+                        <Skeleton className="h-4 w-16 bg-gray-700" />
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="w-8 h-8 rounded-full bg-gray-700" />
+                          <Skeleton className="h-4 w-24 bg-gray-700" />
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <Skeleton className="h-4 w-32 bg-gray-700" />
+                      </td>
+                      <td className="p-4">
+                        <Skeleton className="h-4 w-20 bg-gray-700" />
+                      </td>
+                      <td className="p-4">
+                        <Skeleton className="h-6 w-16 bg-gray-700 rounded-full" />
+                      </td>
+                      <td className="p-4">
+                        <Skeleton className="h-4 w-20 bg-gray-700" />
+                      </td>
+                      <td className="p-4">
+                        <Skeleton className="w-8 h-8 bg-gray-700 rounded" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-3">
+            <Skeleton className="h-4 w-40 bg-gray-700" />
+            <div className="flex gap-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Skeleton key={i} className="w-8 h-8 bg-gray-700 rounded" />
+              ))}
+            </div>
+          </div>
+        </Card>
       </div>
     )
   }
@@ -349,13 +495,13 @@ export default function DriverManagement() {
                   totalPages={pagination?.totalPages ?? 1}
                   onPageChange={handlePageChange}
                 />
-
               </div>
             </Card>
-
           </div>
+        ) : // Add Driver Form View
+        addDriverMutation.isPending ? (
+          renderFormSkeleton()
         ) : (
-          // Add Driver Form View
           <div className="px-6">
             <div className="flex items-center justify-between mt-10 mb-7">
               <h2 className="text-[40px] text-[#1F2022] font-medium">Add Driver</h2>
@@ -481,8 +627,9 @@ export default function DriverManagement() {
                     <div className="lg:col-span-1">
                       <Label className="text-[#C0A05C] text-base font-medium mb-2 block">Photo</Label>
                       <div
-                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors h-[280px] flex flex-col items-center justify-center ${dragActive ? "border-[#C0A05C] bg-[#C0A05C]/10" : "border-[#C0A05C]/50 hover:border-[#C0A05C]"
-                          }`}
+                        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors h-[280px] flex flex-col items-center justify-center ${
+                          dragActive ? "border-[#C0A05C] bg-[#C0A05C]/10" : "border-[#C0A05C]/50 hover:border-[#C0A05C]"
+                        }`}
                         onDragEnter={handleDrag}
                         onDragLeave={handleDrag}
                         onDragOver={handleDrag}
