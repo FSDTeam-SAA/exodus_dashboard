@@ -13,6 +13,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Plus, Edit, Trash2, Settings, Save, X } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 interface Subscription {
   _id: string
@@ -37,11 +38,29 @@ interface CreateSubscriptionData {
   features: string[]
 }
 
-// Mock token - replace with your actual token management
-const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
 
-const fetchSubscriptions = async (): Promise<ApiResponse> => {
+export default function SubscriptionPage() {
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [formData, setFormData] = useState({
+    planName: "",
+    roundtrip: 0,
+    price: 0,
+    planValid: true,
+    features: [] as string[],
+  })
+  const [newFeature, setNewFeature] = useState("")
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null)
+  const [editFormData, setEditFormData] = useState({
+    planName: "",
+    price: 0,
+  })
+  const session = useSession();
+  const AUTH_TOKEN = session?.data?.accessToken
+
+  const queryClient = useQueryClient()
+  const fetchSubscriptions = async (): Promise<ApiResponse> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions`, {
     headers: {
       Authorization: `Bearer ${AUTH_TOKEN}`,
@@ -110,26 +129,6 @@ const updateSubscription = async ({
 
   return response.json()
 }
-
-export default function SubscriptionPage() {
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [formData, setFormData] = useState({
-    planName: "",
-    roundtrip: 0,
-    price: 0,
-    planValid: true,
-    features: [] as string[],
-  })
-  const [newFeature, setNewFeature] = useState("")
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null)
-  const [editFormData, setEditFormData] = useState({
-    planName: "",
-    price: 0,
-  })
-
-  const queryClient = useQueryClient()
 
   const {
     data: subscriptionsData,

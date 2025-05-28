@@ -11,9 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
 
-const API_TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+
 
 interface ScheduleItem {
     day: string
@@ -50,6 +50,8 @@ export function EditRideForm({ scheduleId, initialData, onSuccess, onCancel }: E
     const [schedules, setSchedules] = useState<ScheduleItem[]>(initialData.schedules)
     const [selectedDriverId, setSelectedDriverId] = useState(initialData.driverId)
     const [selectedBusId, setSelectedBusId] = useState(initialData.busId)
+    const session = useSession();
+  const API_TOKEN = session?.data?.accessToken
 
     // Fetch drivers
     const { data: driversData } = useQuery({

@@ -1,13 +1,13 @@
 "use client"
-
 import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Filter, Bus } from "lucide-react"
-import { ReusablePagination } from "@/components/sheyerd/Pagination"
+import { ReusablePagination } from "@/components/shared/Pagination"
 import { toast } from "sonner"
+import { useSession } from "next-auth/react"
 
 interface ReservedBy {
     _id: string
@@ -42,84 +42,81 @@ interface ApiResponse {
     }
 }
 
-// Replace with your actual API base URL and token
-
-const AUTH_TOKEN =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
-
-const fetchReservations = async (page: number): Promise<ApiResponse> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus?page=${page}&limit=10`, {
-        headers: {
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-            "Content-Type": "application/json",
-        },
-    })
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch reservations")
-    }
-
-    return response.json()
-}
-
-const updateReservationStatus = async (reservationId: string): Promise<string> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus/${reservationId}/status`, {
-        method: "PATCH",
-        headers: {
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-            "Content-Type": "application/json",
-        },
-    })
-
-    if (!response.ok) {
-        throw new Error("Failed to update reservation status")
-    }
-
-    return response.json()
-}
-
-const cancelReservation = async (reservationId: string): Promise<string> => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus/${reservationId}/cancel`, {
-        method: "PATCH",
-        headers: {
-            Authorization: `Bearer ${AUTH_TOKEN}`,
-            "Content-Type": "application/json",
-        },
-    })
-
-    if (!response.ok) {
-        throw new Error("Failed to cancel reservation")
-    }
-
-    return response.json()
-}
-
-const formatTime = (timeString: string) => {
-    return timeString
-}
-
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-    })
-}
-
-const getEndTime = (startTime: string, totalHours: number) => {
-    // Simple calculation - you might want to implement proper time parsing
-    const startHour = Number.parseInt(startTime.split(":")[0])
-    const endHour = startHour + totalHours
-    const period = endHour >= 12 ? "PM" : "AM"
-    const displayHour = endHour > 12 ? endHour - 12 : endHour
-    return `${displayHour.toString().padStart(2, "0")}:00${period}`
-}
 
 export default function ReserveBus() {
     const [currentPage, setCurrentPage] = useState(1)
-
+    const session = useSession();
+    const AUTH_TOKEN = session?.data?.accessToken
     const queryClient = useQueryClient()
+
+    const fetchReservations = async (page: number): Promise<ApiResponse> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus?page=${page}&limit=10`, {
+            headers: {
+                Authorization: `Bearer ${AUTH_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch reservations")
+        }
+
+        return response.json()
+    }
+
+    const updateReservationStatus = async (reservationId: string): Promise<string> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus/${reservationId}/status`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${AUTH_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to update reservation status")
+        }
+
+        return response.json()
+    }
+
+    const cancelReservation = async (reservationId: string): Promise<string> => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus/${reservationId}/cancel`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${AUTH_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to cancel reservation")
+        }
+
+        return response.json()
+    }
+
+    const formatTime = (timeString: string) => {
+        return timeString
+    }
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString)
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        })
+    }
+
+    const getEndTime = (startTime: string, totalHours: number) => {
+        // Simple calculation - you might want to implement proper time parsing
+        const startHour = Number.parseInt(startTime.split(":")[0])
+        const endHour = startHour + totalHours
+        const period = endHour >= 12 ? "PM" : "AM"
+        const displayHour = endHour > 12 ? endHour - 12 : endHour
+        return `${displayHour.toString().padStart(2, "0")}:00${period}`
+    }
 
     const statusMutation = useMutation({
         mutationFn: updateReservationStatus,
@@ -139,8 +136,8 @@ export default function ReserveBus() {
             queryClient.invalidateQueries({ queryKey: ["reservations"] })
             toast.success("Reservation has been cancelled successfully.")
         },
-        onError: (error) => {
-            console.error("Error cancelling reservation:", error)
+        onError: () => {
+           
             toast.error("Failed to cancel reservation. Please try again.")
         },
     })

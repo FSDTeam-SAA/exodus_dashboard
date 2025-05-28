@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
+import { useSession } from "next-auth/react"
 
 interface BookingData {
   year: number
@@ -24,9 +25,8 @@ interface ChartData {
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-// Your JWT token
-const AUTH_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+
+
 
 // Generate dynamic year options
 function generateYearOptions(): number[] {
@@ -41,19 +41,7 @@ function generateYearOptions(): number[] {
   return years.reverse() // Show newest years first
 }
 
-async function fetchBookingStats(year: string): Promise<ApiResponse> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking-stats?year=${year}`, {
-    headers: {
-      Authorization: `Bearer ${AUTH_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  })
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch booking stats")
-  }
-  return response.json()
-}
 
 function transformData(apiData: BookingData[]): ChartData[] {
   // Create array for all 12 months with 0 bookings as default
@@ -74,7 +62,21 @@ function transformData(apiData: BookingData[]): ChartData[] {
 
 export function BookingChart() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString())
+  const session = useSession();
+  const AUTH_TOKEN = session?.data?.accessToken
+  async function fetchBookingStats(year: string): Promise<ApiResponse> {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking-stats?year=${year}`, {
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
 
+    if (!response.ok) {
+      throw new Error("Failed to fetch booking stats")
+    }
+    return response.json()
+  }
   const {
     data: apiResponse,
     isLoading,
@@ -88,7 +90,7 @@ export function BookingChart() {
   const chartData = apiResponse?.data ? transformData(apiResponse.data) : []
 
   // Debug: Log the API response
-  console.log("API Response:", apiResponse)
+  
 
   if (error) {
     return (

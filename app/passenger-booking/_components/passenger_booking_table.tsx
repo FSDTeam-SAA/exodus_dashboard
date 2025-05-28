@@ -7,7 +7,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Calendar } from "lucide-react"
-import { ReusablePagination } from "@/components/sheyerd/Pagination"
+import { ReusablePagination } from "@/components/shared/Pagination"
+import { useSession } from "next-auth/react"
 
 
 // Define types for TypeScript
@@ -39,8 +40,9 @@ interface ApiResponse {
 export function TicketTable() {
   const [currentPage, setCurrentPage] = useState(1)
   const limit = 1
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODFlZTM4MmI2YzY0NzEwNjU0NDE3YjUiLCJlbWFpbCI6ImJkY2FsbGluZ0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDgyMzAyMzMsImV4cCI6MTc0ODMxNjYzM30.uq8uW4rFVTwAKYWJE9ETARQv937GG34BQGxHENhZ5Ow"
+  const session = useSession();
+  const token = session?.data?.accessToken
+
 
   const { data, isLoading, error } = useQuery<ApiResponse>({
     queryKey: ["tickets", currentPage],
@@ -62,7 +64,7 @@ export function TicketTable() {
   })
 
   const handlePageChange = (page: number) => {
-    console.log("Page changed to:", page) // Debug log
+
     setCurrentPage(page)
   }
 

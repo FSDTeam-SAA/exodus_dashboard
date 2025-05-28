@@ -1,13 +1,13 @@
-import { DashboardNavbar } from '@/components/dashboard-navbar'
 import React from 'react'
-import ChangePassword from './_component/changepasswordpage'
+import NotificationList from './_component/NotificationList'
+import { DashboardNavbar } from '@/components/dashboard-navbar'
 
 const page = () => {
     return (
         <div>
             <DashboardNavbar />
             <div>
-                <ChangePassword />
+                <NotificationList />
             </div>
         </div>
     )
