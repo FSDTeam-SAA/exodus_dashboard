@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react"
 
 interface UserData {
   _id: string
+  id: string
   name: string
   email: string
   username: string
@@ -59,6 +60,7 @@ export default function PersonalInformation() {
   const fetchUser = async (): Promise<ApiResponse> => {
     const token = session?.accessToken
     const userId = session?.user?.id
+  
 
     if (!token) {
       throw new Error("No authentication token found")
@@ -143,6 +145,7 @@ export default function PersonalInformation() {
 
   const handleSave = (): void => {
     updateMutation.mutate({
+      id: session?.user?.id, // Add userId as _id
       name: formData.name,
       email: formData.email,
       username: formData.username,
