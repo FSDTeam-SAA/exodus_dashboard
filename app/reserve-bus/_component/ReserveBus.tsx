@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Filter, Bus } from "lucide-react"
+import { Bus } from "lucide-react"
 import { ReusablePagination } from "@/components/shared/Pagination"
 import { toast } from "sonner"
 import { useSession } from "next-auth/react"
@@ -190,14 +190,14 @@ export default function ReserveBus() {
                         <Bus className="h-10 w-10 text-[#1F2022]" />
                         <h2 className="text-[40px] text-[#1F2022] font-medium"> Reserve Bus</h2>
                     </div>
-                    <Button variant="outline" size="sm" className=" border-none text-[#1F2022] tex-base font-medium rounded-[5px] px-4 h-[44px] hover:opacity-90"
+                    {/* <Button variant="outline" size="sm" className=" border-none text-[#1F2022] tex-base font-medium rounded-[5px] px-4 h-[44px] hover:opacity-90"
                         style={{
                             background: 'linear-gradient(287.15deg, #946329 0%, #F3E898 50%, #946329 100%)',
                         }}
                     >
                         <Filter className="h-4 w-4 mr-2 " />
                         Filter
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
             <Card className="bg-[#1F2022]">

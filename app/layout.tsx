@@ -17,6 +17,9 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Exodus Dashboard",
   description: "Admin dashboard for Exodus Transport Company",
+  icons: {
+    icon: "assets/logo.png", // or .png/.svg
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

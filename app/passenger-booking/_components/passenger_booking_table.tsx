@@ -4,7 +4,6 @@ import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Calendar } from "lucide-react"
 import { ReusablePagination } from "@/components/shared/Pagination"
@@ -76,18 +75,7 @@ export function TicketTable() {
     })
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-      case "cancelled":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
-    }
-  }
+ 
 
   if (error) {
     return (
@@ -143,7 +131,7 @@ export function TicketTable() {
                   data.data.ticket.map((ticket: Ticket) => (
                     <div
                       key={ticket._id}
-                      className="grid grid-cols-8 gap-4 p-4 border-b border-[#C0A05C] hover:bg-gray-800 transition-colors items-center"
+                      className="grid grid-cols-8 gap-4 p-4 border-b border-[#C0A05C]  items-center"
                     >
                       <div className="text-[#C0A05C] text-base font-normal">#{ticket._id.slice(-6)}</div>
                       <div className="flex items-center gap-2">
@@ -167,7 +155,8 @@ export function TicketTable() {
                       <div className="text-base text-[#C0A05C] font-medium">{formatDate(ticket.date)}</div>
                       <div className="text-sm text-[#C0A05C] font-medium">${ticket.price}</div>
                       <div className="flex items-center gap-2">
-                        <Badge className={getStatusColor(ticket.status)}>{ticket.status}</Badge>
+                        {/* <Badge className={getStatusColor(ticket.status)}>{ticket.status}</Badge> */}
+                        <span className="text-sm text-[#C0A05C] font-medium">{ticket.status}</span>
                       </div>
                     </div>
                   ))
