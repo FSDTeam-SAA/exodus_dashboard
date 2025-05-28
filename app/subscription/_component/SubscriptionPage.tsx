@@ -1,4 +1,3 @@
-
 "use client"
 
 import type React from "react"
@@ -14,6 +13,7 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Plus, Edit, Trash2, Settings, Save, X } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Subscription {
   _id: string
@@ -38,7 +38,6 @@ interface CreateSubscriptionData {
   features: string[]
 }
 
-
 export default function SubscriptionPage() {
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState({
@@ -56,79 +55,78 @@ export default function SubscriptionPage() {
     planName: "",
     price: 0,
   })
-  const session = useSession();
+  const session = useSession()
   const AUTH_TOKEN = session?.data?.accessToken
 
   const queryClient = useQueryClient()
   const fetchSubscriptions = async (): Promise<ApiResponse> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions`, {
-    headers: {
-      Authorization: `Bearer ${AUTH_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  })
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions`, {
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch subscriptions")
+    if (!response.ok) {
+      throw new Error("Failed to fetch subscriptions")
+    }
+
+    return response.json()
   }
 
-  return response.json()
-}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const createSubscription = async (data: CreateSubscriptionData): Promise<any> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createSubscription = async (data: CreateSubscriptionData): Promise<any> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${AUTH_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
+    if (!response.ok) {
+      throw new Error("Failed to create subscription")
+    }
 
-  if (!response.ok) {
-    throw new Error("Failed to create subscription")
+    return response.json()
   }
 
-  return response.json()
-}
+  const deleteSubscription = async (id: string): Promise<string> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscription/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    })
 
-const deleteSubscription = async (id: string): Promise<string> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscription/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${AUTH_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  })
+    if (!response.ok) {
+      throw new Error("Failed to delete subscription")
+    }
 
-  if (!response.ok) {
-    throw new Error("Failed to delete subscription")
+    return response.json()
   }
 
-  return response.json()
-}
+  const updateSubscription = async ({
+    id,
+    data,
+  }: { id: string; data: { planName: string; price: number } }): Promise<string> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${AUTH_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
 
-const updateSubscription = async ({
-  id,
-  data,
+    if (!response.ok) {
+      throw new Error("Failed to update subscription")
+    }
 
-}: { id: string; data: { planName: string; price: number } }): Promise<string> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/${id}`, {
-    method: "PATCH",
-    headers: {
-      Authorization: `Bearer ${AUTH_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to update subscription")
+    return response.json()
   }
-
-  return response.json()
-}
 
   const {
     data: subscriptionsData,
@@ -263,12 +261,58 @@ const updateSubscription = async ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-lg">Loading subscriptions...</div>
+      <div className="px-6">
+        <div className="flex items-center justify-between mb-7 mt-10">
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-10 h-10 bg-gray-300" />
+            <Skeleton className="h-10 w-64 bg-gray-300" />
           </div>
+          <Skeleton className="h-12 w-48 bg-gray-300" />
         </div>
+
+        <Card className="bg-amber-100 border-amber-200">
+          <CardContent className="p-0">
+            {/* Header Skeleton */}
+            <div className="grid grid-cols-6 gap-4 p-4 bg-[#C0A05C]">
+              {["Plan Name", "Price", "Description", "Features", "Active User", "Action"].map((header, index) => (
+                <Skeleton key={index} className="h-5 w-full bg-[#946329]" />
+              ))}
+            </div>
+
+            {/* Subscription Rows Skeleton */}
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="grid grid-cols-6 gap-4 p-4 bg-[#1F2022] border-b border-[#C0A05C]">
+                {/* Plan Name */}
+                <Skeleton className="h-5 w-24 bg-gray-700" />
+
+                {/* Price */}
+                <Skeleton className="h-5 w-16 bg-gray-700" />
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full bg-gray-700" />
+                  <Skeleton className="h-4 w-3/4 bg-gray-700" />
+                </div>
+
+                {/* Features */}
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-20 bg-gray-700" />
+                  <Skeleton className="h-4 w-16 bg-gray-700" />
+                  <Skeleton className="h-4 w-24 bg-gray-700" />
+                </div>
+
+                {/* Active Users */}
+                <Skeleton className="h-5 w-12 bg-gray-700" />
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 w-8 bg-gray-700" />
+                  <Skeleton className="h-8 w-8 bg-gray-700" />
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -525,8 +569,8 @@ const updateSubscription = async ({
             <div className="bg-[#1F2022] border border-[#C0A05C] rounded-lg p-6 max-w-md w-full mx-4">
               <h3 className="text-[#C0A05C] text-lg font-medium mb-4">Confirm Delete</h3>
               <p className="text-[#C0A05C] mb-6">
-                Are you sure you want to delete the subscription &quot;{selectedSubscription?.planName}&quot;? This action cannot
-                be undone.
+                Are you sure you want to delete the subscription &quot;{selectedSubscription?.planName}&quot;? This
+                action cannot be undone.
               </p>
               <div className="flex gap-4 justify-end">
                 <Button
