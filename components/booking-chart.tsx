@@ -89,9 +89,6 @@ export function BookingChart() {
 
   const chartData = apiResponse?.data ? transformData(apiResponse.data) : []
 
-  // Debug: Log the API response
-  
-
   if (error) {
     return (
       <Card className="bg-gray-800 border-gray-700">
@@ -134,7 +131,7 @@ export function BookingChart() {
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1F2937",
-                    border: "1px solid #D5D5D5",
+                    border: "1px solid #C0A05C",
                     borderRadius: "8px",
                     color: "#C0A05C",
                   }}

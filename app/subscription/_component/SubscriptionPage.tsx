@@ -390,7 +390,7 @@ export default function SubscriptionPage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="text-amber-400 hover:text-amber-300"
+                        className="text-blue-400"
                         onClick={() => handleEdit(subscription)}
                       >
                         <Edit className="w-4 h-4" />
@@ -398,7 +398,7 @@ export default function SubscriptionPage() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="text-amber-400 hover:text-amber-300"
+                        className="text-red-400"
                         onClick={() => handleDelete(subscription)}
                       >
                         <Trash2 className="w-4 h-4" />

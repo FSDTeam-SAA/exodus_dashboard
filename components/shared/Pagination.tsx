@@ -43,7 +43,7 @@ export function ReusablePagination({
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="h-8 w-8 p-0 border-[#C0A05C] dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+        className="h-8 w-8 p-0 rounded-[5px] border-[#C0A05C] dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
       >
         <ChevronLeft className="h-4 w-4 text-white" />
       </Button>
@@ -54,16 +54,16 @@ export function ReusablePagination({
             variant={currentPage === 1 ? "default" : "outline"}
             size="sm"
             onClick={() => onPageChange(1)}
-            className={`h-8 w-8 p-0 ${currentPage === 1
-              ? "bg-[#C0A05C] hover:bg-[#C0A05C]/80 text-white"
-              : "border-[#C0A05C] dark:border-[#C0A05C]/80 hover:bg-amber-100 dark:hover:bg-amber-800"
+            className={`h-8 w-8 rounded-[5px] p-0 ${currentPage === 1
+              ? "bg-[#C0A05C] hover:bg-[#C0A05C]/80 text-white "
+              : "border-[#C0A05C] dark:border-[#C0A05C]/80 hover:bg-amber-100 "
               }`}
           >
             1
           </Button>
           {showStartEllipsis && (
-            <div className="flex items-center justify-center h-8 w-8">
-              <MoreHorizontal className="h-4 w-4 text-[#C0A05C] dark:text-amber-400" />
+            <div className="flex items-center justify-center h-8 w-8 rounded-[5px]">
+              <MoreHorizontal className="h-4 w-4 text-[#C0A05C] " />
             </div>
           )}
         </>
@@ -75,9 +75,9 @@ export function ReusablePagination({
           variant={currentPage === page ? "default" : "outline"}
           size="sm"
           onClick={() => onPageChange(page)}
-          className={`h-8 w-8 p-0 ${currentPage === page
+          className={`h-8 w-8 p-0 rounded-[5px] text-[#C0A05C] ${currentPage === page
             ? "bg-[#C0A05C] hover:bg-[#C0A05C]/80 text-white"
-            : "border-[#C0A05C] dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+            : "border-[#C0A05C] "
             }`}
         >
           {page}
@@ -97,7 +97,7 @@ export function ReusablePagination({
             onClick={() => onPageChange(totalPages)}
             className={`h-8 w-8 p-0 ${currentPage === totalPages
               ? "bg-amber-600 hover:bg-amber-700 text-white"
-              : "border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+              : "border-[#C0A05C] dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
               }`}
           >
             {totalPages}
@@ -110,7 +110,7 @@ export function ReusablePagination({
         size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="h-8 w-8 p-0 border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-800"
+        className="h-8 w-8 p-0 rounded-[5px] border-[#C0A05C] "
       >
         <ChevronRight className="h-4 w-4 text-white" />
       </Button>
