@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { Plus, Edit, Trash2 } from "lucide-react"
+import { Plus, Edit, Trash2, ChevronDown, Bus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -17,6 +17,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+
 
 import { toast } from "sonner"
 import { AddRideForm } from "./AddRideForm"
@@ -157,6 +159,30 @@ export default function ScheduledRidePage() {
     },
   })
 
+  // Toggle schedule status mutation
+  const toggleStatusMutation = useMutation({
+    mutationFn: async (scheduleId: string) => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schedule/${scheduleId}/status`, {
+        method: "PATCH", // or PUT depending on your API
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      })
+      if (!response.ok) {
+        throw new Error("Failed to toggle schedule status")
+      }
+      return response.json()
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["schedules"] })
+      toast.success(data.message || "Schedule status updated successfully")
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update schedule status")
+    },
+  })
+
   const handleDeleteSchedule = (scheduleId: string) => {
     setDeleteScheduleId(scheduleId)
   }
@@ -169,6 +195,10 @@ export default function ScheduledRidePage() {
     if (deleteScheduleId) {
       deleteScheduleMutation.mutate(deleteScheduleId)
     }
+  }
+
+  const handleToggleStatus = (scheduleId: string) => {
+    toggleStatusMutation.mutate(scheduleId)
   }
 
   const handleAddRideSuccess = () => {
@@ -209,7 +239,8 @@ export default function ScheduledRidePage() {
           <>
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-[40px] text-[#1F2022] font-medium">🚌 Scheduled Ride</h1>
+              <Bus className="w-10 h-10 text-[#1F2022]" />
+              <h1 className="text-[40px] text-[#1F2022] font-medium">Scheduled Ride</h1>
               <Button
                 onClick={() => setCurrentView("add")}
                 className="text-[#1F2022] h-[50px] rounded-[8px]"
@@ -279,17 +310,39 @@ export default function ScheduledRidePage() {
                                 schedule.isActive ? "bg-[#09B850] hover:bg-[#09B850]/80" : "bg-red-600 hover:bg-red-700"
                               }`}
                             >
-                              <p className="text-base text-[#1F2022] font-medium px-3 py-2">
+                              <p className="text-base text-[#1F2022] font-medium w-[70px] text-center py-2">
                                 {schedule.isActive ? "Active" : "Inactive"}
                               </p>
                             </Badge>
+                             <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-[#C0A05C] hover:text-[#C0A05C]/80"
+                                    disabled={toggleStatusMutation.isPending}
+                                  >
+                                    <ChevronDown className="w-4 h-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="bg-[#C0A05C] border-none rounded-[8px] ">
+                                  <DropdownMenuItem
+                                    onClick={() => handleToggleStatus(schedule._id)}
+                                    className="text-[#1F2022]"
+                                    disabled={toggleStatusMutation.isPending}
+                                  >
+                                    {schedule.isActive ? "Deactivate" : "Activate"}
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
+                             
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="  text-blue-400"
+                                className="text-blue-400"
                                 onClick={() => handleEditSchedule(schedule)}
                               >
                                 <Edit className="w-4 h-4" />

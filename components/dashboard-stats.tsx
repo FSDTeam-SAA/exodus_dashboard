@@ -79,8 +79,8 @@ export function DashboardStats() {
           <Card key={index} className="bg-[#1F2022] border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-500/10">
-                  <Loader2 className="h-6 w-6 text-yellow-500 animate-spin" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg ">
+                  <Loader2 className="h-6 w-6 text-[#C0A05C] animate-spin" />
                 </div>
                 <div>
                   <div className="h-4 w-20 bg-[#1F2022] rounded animate-pulse mb-2"></div>
@@ -100,7 +100,7 @@ export function DashboardStats() {
         <Card className="bg-red-900/20 border-red-700 col-span-full">
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
-              <AlertCircle className="h-6 w-6 text-red-500" />
+              <AlertCircle className="h-[60px] w-[60px] text-red-500" />
               <div>
                 <p className="text-sm font-medium text-red-500">Error loading stats</p>
                 <p className="text-sm text-red-400">
@@ -117,15 +117,15 @@ export function DashboardStats() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <Card key={stat.title} className="bg-[#1F2022] border-gray-700">
+        <Card key={stat.title} className="bg-[#1F2022] h-[160px]">
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg ">
-                <stat.icon className="h-6 w-6 text-[#C0A05C]" />
+              <div className="flex h-[60px] w-[60px] items-center justify-center rounded-lg ">
+                <stat.icon className="h-[60px] w-[60px] text-[#C0A05C]" />
               </div>
               <div>
-                <p className="text-sm font-medium text-[#C0A05C]">{stat.title}</p>
-                <p className="text-3xl font-bold text-[#C0A05C]">{stat.value}</p>
+                <p className="text-xl font-medium text-[#C0A05C]">{stat.title}</p>
+                <p className="text-[40px] font-bold text-[#C0A05C]">{stat.value}</p>
               </div>
             </div>
           </CardContent>

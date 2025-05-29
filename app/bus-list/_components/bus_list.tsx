@@ -557,7 +557,7 @@ export default function BusList() {
                   id="stops"
                   value={stopsInput}
                   onChange={(e) => setStopsInput(e.target.value)}
-                  placeholder="dhaka, A, B, C, narayanganj"
+                  placeholder="Enter stops (comma separated)"
                   className="bg-[#1F2022] border-[#C0A05C] text-white"
                   required
                 />

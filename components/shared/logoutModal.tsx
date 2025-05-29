@@ -14,25 +14,20 @@ interface LogoutModalProps {
 export function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogOverlay className="bg-[#1F2022]/90" />
-      <DialogContent className="sm:max-w-md bg-[#1F2022] border-none  p-8">
+      <DialogOverlay className="bg-[#1F2022]/2 backdrop-blur-[2px]" />
+      <DialogContent className=" bg-[#1F2022] border-none  p-5 w-full !rounded-[10px]">
         <VisuallyHidden>
           <DialogTitle>Logout Confirmation</DialogTitle>
         </VisuallyHidden>
         <div className="flex flex-col items-center space-y-6">
           {/* Logo */}
           <div className="flex justify-center">
-            <Image src="/assets/logo.png" alt="EXODUS logo" width={100} height={100} className="w-30 h-30" />
-          </div>
-
-          {/* EXODUS text */}
-          <div className="text-center">
-            <h2 className="text-[#C0A05C] text-xl font-bold tracking-wider">EXODUS</h2>
+            <Image src="/assets/logo.png" alt="EXODUS logo" width={100} height={100} className="w-[200px] h-[145px]" />
           </div>
 
           {/* Question */}
           <div className="text-center">
-            <p className="text-[#C0A05C] text-lg font-medium">Are You Sure To Log Out?</p>
+            <p className="text-[#C0A05C] text-[35px] font-semibold ">Are You Sure To Log Out?</p>
           </div>
 
           {/* Buttons */}

@@ -13,9 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-// import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Bell, ChevronDown, Loader2 } from "lucide-react"
 import { LogoutModal } from "./shared/logoutModal"
+import { ChangePasswordModal } from "./chagePassowrdModal"
 
 
 // Function to fetch user data
@@ -38,6 +38,7 @@ export function DashboardNavbar() {
   const userId = session.data?.user?.id
   const token = session.data?.accessToken
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false)
 
   const {
     data: userData,
@@ -65,10 +66,14 @@ export function DashboardNavbar() {
     setIsLogoutModalOpen(true)
   }
 
+  const handleChangePasswordClick = () => {
+    setIsChangePasswordModalOpen(true)
+  }
+
   const handleLogoutConfirm = async () => {
     try {
       await signOut({
-        callbackUrl: "/", // Redirect to home page after logout
+        callbackUrl: "/", 
         redirect: true,
       })
     } catch (error) {
@@ -85,9 +90,7 @@ export function DashboardNavbar() {
   return (
     <>
       <header className="flex h-[80px] items-center justify-between border-b bg-[#1F2022] px-6">
-        <div className="flex items-center gap-4 ">
-          {/* <SidebarTrigger className="-ml-2" /> */}
-        </div>
+        <div className="flex items-center gap-4 ">{/* <SidebarTrigger className="-ml-2" /> */}</div>
 
         <div className="flex items-center gap-4 ">
           <Link href="/notification">
@@ -119,10 +122,7 @@ export function DashboardNavbar() {
                       {user?.avatar?.url ? (
                         <AvatarImage src={user.avatar.url || "/placeholder.svg"} alt={user.name} />
                       ) : (
-                        <AvatarImage
-                          src="/placeholder.svg?height=32&width=32&query=user profile"
-                          alt={user?.name || "User"}
-                        />
+                        <AvatarImage src="/placeholder.svg?height=32&width=32" alt={user?.name || "User"} />
                       )}
                       <AvatarFallback className="text-[#C0A05C]">
                         {user?.name ? getInitials(user.name) : "U"}
@@ -141,8 +141,11 @@ export function DashboardNavbar() {
               <DropdownMenuItem asChild className="border-b border-[#1F2022]/20 cursor-pointer hover:bg-[#1F2022]/10">
                 <Link href="/personal-information">Personal Information</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="border-b border-[#1F2022]/20 cursor-pointer hover:bg-[#1F2022]/10">
-                <Link href="/change-password">Change Password</Link>
+              <DropdownMenuItem
+                className="border-b border-[#1F2022]/20 cursor-pointer hover:bg-[#1F2022]/10"
+                onClick={handleChangePasswordClick}
+              >
+                Change Password
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-[#1F2022]/20" />
               <DropdownMenuItem className="cursor-pointer hover:bg-[#1F2022]/10" onClick={handleLogoutClick}>
@@ -154,6 +157,7 @@ export function DashboardNavbar() {
       </header>
 
       <LogoutModal isOpen={isLogoutModalOpen} onClose={handleLogoutCancel} onConfirm={handleLogoutConfirm} />
+      <ChangePasswordModal isOpen={isChangePasswordModalOpen} onClose={() => setIsChangePasswordModalOpen(false)} />
     </>
   )
 }
