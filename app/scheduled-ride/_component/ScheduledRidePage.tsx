@@ -239,8 +239,10 @@ export default function ScheduledRidePage() {
           <>
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-1">
               <Bus className="w-10 h-10 text-[#1F2022]" />
               <h1 className="text-[40px] text-[#1F2022] font-medium">Scheduled Ride</h1>
+              </div>
               <Button
                 onClick={() => setCurrentView("add")}
                 className="text-[#1F2022] h-[50px] rounded-[8px]"
@@ -310,7 +312,7 @@ export default function ScheduledRidePage() {
                                 schedule.isActive ? "bg-[#09B850] hover:bg-[#09B850]/80" : "bg-red-600 hover:bg-red-700"
                               }`}
                             >
-                              <p className="text-base text-[#1F2022] font-medium w-[70px] text-center py-2">
+                              <p className="text-base text-white] font-medium w-[70px] text-center py-2">
                                 {schedule.isActive ? "Active" : "Inactive"}
                               </p>
                             </Badge>
@@ -328,7 +330,7 @@ export default function ScheduledRidePage() {
                                 <DropdownMenuContent className="bg-[#C0A05C] border-none rounded-[8px] ">
                                   <DropdownMenuItem
                                     onClick={() => handleToggleStatus(schedule._id)}
-                                    className="text-[#1F2022]"
+                                    className="text-white"
                                     disabled={toggleStatusMutation.isPending}
                                   >
                                     {schedule.isActive ? "Deactivate" : "Activate"}
@@ -368,7 +370,11 @@ export default function ScheduledRidePage() {
             {/* Add Ride Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
-                <h1 className="text-[40px] text-[#1F2022] font-medium">🚌 Add Ride</h1>
+                  <div className="flex items-center gap-1">
+              <Bus className="w-10 h-10 text-[#1F2022]" />
+              <h1 className="text-[40px] text-[#1F2022] font-medium">Add Ride</h1>
+              </div>
+               
               </div>
             </div>
 
