@@ -24,7 +24,7 @@ interface Reservation {
   price: number
   totalHour: number
   reservedBy: ReservedBy
-  status: "confirmed" | "cancelled" | "pending"
+  status: "reserved" | "cancelled" | "pending"
   createdAt: string
   updatedAt: string
 }
@@ -81,6 +81,7 @@ export default function ReserveBus() {
   const session = useSession()
   const AUTH_TOKEN = session?.data?.accessToken
   const queryClient = useQueryClient()
+  
 
   const fetchReservations = async (page: number): Promise<ApiResponse> => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reserve-bus?page=${page}&limit=10`, {
@@ -312,7 +313,7 @@ export default function ReserveBus() {
                     onClick={() => handleActiveClick(reservation._id)}
                     disabled={
                       statusMutation.isPending ||
-                      reservation.status === "confirmed" ||
+                      reservation.status === "reserved" || // Disable when status is active/confirmed
                       (cancelMutation.isPending && cancelMutation.variables === reservation._id)
                     }
                   >
@@ -324,7 +325,8 @@ export default function ReserveBus() {
                     onClick={() => handleCancelClick(reservation._id)}
                     disabled={
                       cancelMutation.isPending ||
-                      reservation.status === "cancelled" ||
+                      reservation.status === "cancelled" || // Disable when status is cancelled
+                      reservation.status === "pending" || // Disable when status is pending
                       (statusMutation.isPending && statusMutation.variables === reservation._id)
                     }
                   >
