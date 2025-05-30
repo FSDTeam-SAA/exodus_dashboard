@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -438,7 +438,7 @@ export default function DriverManagement() {
                         <th className="text-left p-4 text-base text-[#1F2022] font-medium">Name</th>
                         <th className="text-left p-4 text-base text-[#1F2022] font-medium">Email</th>
                         <th className="text-left p-4 text-base text-[#1F2022] font-medium">Phone</th>
-                        <th className="text-left p-4 text-base text-[#1F2022] font-medium">Credit</th>
+                      
                         <th className="text-left p-4 text-base text-[#1F2022] font-medium">Added</th>
                         <th className="text-left p-4 text-base text-[#1F2022] font-medium">Action</th>
                       </tr>
@@ -460,11 +460,7 @@ export default function DriverManagement() {
                           </td>
                           <td className="p-4 text-base text-[#C0A05C] font-medium">{driver.email}</td>
                           <td className="p-4 text-base text-[#C0A05C] font-medium">{driver.phone || "N/A"}</td>
-                          <td className="p-4">
-                            <Badge variant="secondary" className="bg-green-600 text-white">
-                              ${driver.credit ?? 0}
-                            </Badge>
-                          </td>
+                     
                           <td className="p-4 text-base text-[#C0A05C] font-medium">
                             {new Date(driver.createdAt).toLocaleDateString()}
                           </td>

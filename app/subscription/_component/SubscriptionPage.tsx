@@ -415,7 +415,7 @@ export default function SubscriptionPage() {
             <div className="flex items-center justify-between mb-7 mt-10">
               <div className="flex items-center gap-2">
                 <Settings className="w-6 h-6" />
-                <h2 className="text-[40px] text-[#1F2022] font-medium">Add Subscription</h2>
+                <h2 className="text-[40px] text-[#1F2022] font-medium">Add Subscription </h2>
               </div>
               <Button
                 onClick={handleSubmit}
